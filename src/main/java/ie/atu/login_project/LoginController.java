@@ -14,7 +14,7 @@ public class LoginController {
     @PostMapping("/RegisterUser")
     public Login RegisterUser(@RequestBody Login Registerlogin) {
         UsernameList.add(Registerlogin);
-        return (Login) UsernameList;
+        return Registerlogin;
     }
 
     @GetMapping("/loginUser")
