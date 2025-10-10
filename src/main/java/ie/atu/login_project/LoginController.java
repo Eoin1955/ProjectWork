@@ -1,5 +1,6 @@
 package ie.atu.login_project;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class LoginController {
     List<PersonDetails> PersonList = new ArrayList<>();
 
     @PostMapping("/RegisterUser")
-    public Login registerUser(@RequestBody Login registerLogin) {
+    public Login registerUser(@Valid @RequestBody Login registerLogin) {
         // Check if username already exists
         for (Login user : UsernameList) {
             if (user.getUsername().equals(registerLogin.getUsername())) {
@@ -26,7 +27,7 @@ public class LoginController {
     }
 
     @GetMapping("/loginUser")
-    public Login LoginUser(@RequestParam String username, @RequestParam String password) {
+    public Login LoginUser(@Valid @RequestParam String username, @RequestParam String password) {
         for (Login login : UsernameList) {
             if(login.getUsername().equals(username) && login.getPassword().equals(password)) {
                 return new Login(username, "successful login");
@@ -42,15 +43,21 @@ public class LoginController {
     }
 
     @PostMapping("/MoreDetails")
-    public PersonDetails MoreDetails(@RequestBody PersonDetails personDetails) {
-        for (PersonDetails personDetail : PersonList) {
-            if (personDetail.getUsername().equals(personDetails.getUsername())) {
-                return new PersonDetails(personDetail.getUsername(),"Username Details already entered","",0,"","","");
-            }
-        }
+    public PersonDetails MoreDetails(@Valid @RequestBody PersonDetails personDetails) {
+        for(Login login : UsernameList) {
+            if(login.getUsername().equals(personDetails.getUsername())) {
+                for (PersonDetails personDetail : PersonList) {
+                    if (personDetail.getUsername().equals(personDetails.getUsername())) {
+                        return new PersonDetails(personDetail.getUsername(),"Username Details already entered","",0,"","","");
+                    }
+                }
 
-        PersonList.add(personDetails);
-        return personDetails;
+                PersonList.add(personDetails);
+                return personDetails;
+            }
+            }
+
+        return new PersonDetails("","Username isn't registered","",0,"","","");
     }
 
     @GetMapping("/MoreDetails")
