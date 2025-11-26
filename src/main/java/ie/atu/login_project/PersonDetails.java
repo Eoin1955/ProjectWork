@@ -1,12 +1,22 @@
 package ie.atu.login_project;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PersonDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Size(min = 1, max = 20, message = "larger than 20 characters or blank")
     @NotBlank
     private  String username;
@@ -19,7 +29,6 @@ public class PersonDetails {
     private int age;
     @NotBlank(message = "email blank")
     @Email(message = "please enter valid email")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Invalid email format")
     private String email;
     @NotBlank(message = "address blank")
     private String address;
