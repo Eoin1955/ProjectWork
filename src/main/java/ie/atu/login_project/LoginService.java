@@ -7,12 +7,18 @@ import java.util.List;
 @Service
 public class LoginService {
     private LoginRepository Repo;
+    private PersonDetailsRepository PDRepo;
     public LoginService(LoginRepository Repo) {
         this.Repo = Repo;
     }
+    public LoginService(PersonDetailsRepository PDRepo){this.PDRepo=PDRepo;}
 
     public Login createLogin(Login login) {
         return Repo.save(login);
+    }
+
+    public PersonDetails createPersonDetails(PersonDetails personDetails) {
+        return PDRepo.save(personDetails);
     }
 
     public List<Login> getAllLogins() {return Repo.findAll();}

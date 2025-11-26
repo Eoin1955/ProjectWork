@@ -1,9 +1,6 @@
 package ie.atu.login_project;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -16,10 +13,8 @@ import lombok.*;
 public class PersonDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long personid;
     @Size(min = 1, max = 20, message = "larger than 20 characters or blank")
-    @NotBlank
-    private  String username;
     @Size(min = 1, max = 50, message = "firstname more than 50 characters or blank")
     private String firstName;
     @Size(min = 1, max = 50, message = "lastname more than 50 characters or blank")
@@ -34,4 +29,6 @@ public class PersonDetails {
     private String address;
     @Size(min = 9, max = 10, message = "phone number should be between 9 and 10 characters")
     private String phone;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long loginID;
 }
