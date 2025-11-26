@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/loginUser")
+@RequestMapping("/api/user")
 public class LoginController {
     private final LoginService loginService;
 
