@@ -1,6 +1,7 @@
 package ie.atu.login_project.Controller;
 
 import ie.atu.login_project.Model.Login;
+import ie.atu.login_project.Model.PersonDetails;
 import ie.atu.login_project.Service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -45,9 +46,9 @@ public class LoginController {
         loginService.deleteLogin(Loginid);
     }
 
-   /* @PostMapping("/PersonDetails")
+   @PostMapping("/PersonDetails")
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDetails createPersonDetails(@Valid @RequestBody  PersonDetails personDetails) {
         return loginService.createPersonDetails(personDetails);
-    }*/
+    }
 }

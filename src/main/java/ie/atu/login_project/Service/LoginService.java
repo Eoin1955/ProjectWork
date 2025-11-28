@@ -43,4 +43,18 @@ public class LoginService {
         Repo.delete(login);
         return login;
     }
+
+    public List<PersonDetails> getAllPersonDetails() {return PDRepo.findAll();}
+
+    public PersonDetails updatePersonDetails(Long Personid, PersonDetails personDetails) {
+        PersonDetails existing = PDRepo.findById(Personid).orElseThrow(()->new IllegalArgumentException("Person Id not found"));
+
+        existing.setFirstName(personDetails.getFirstName());
+        existing.setLastName(personDetails.getLastName());
+        existing.setEmail(personDetails.getEmail());
+        existing.setPhone(personDetails.getPhone());
+        existing.setAddress(personDetails.getAddress());
+        return PDRepo.save(existing);
+
+    }
 }

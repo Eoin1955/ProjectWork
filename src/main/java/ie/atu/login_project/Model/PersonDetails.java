@@ -12,9 +12,13 @@ import lombok.*;
 @Builder
 public class PersonDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long personid;
-    @Size(min = 1, max = 20, message = "larger than 20 characters or blank")
+    private String Loginid;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "personId")
+    private Login login;
+
     @Size(min = 1, max = 50, message = "firstname more than 50 characters or blank")
     private String firstName;
     @Size(min = 1, max = 50, message = "lastname more than 50 characters or blank")
@@ -29,6 +33,4 @@ public class PersonDetails {
     private String address;
     @Size(min = 9, max = 10, message = "phone number should be between 9 and 10 characters")
     private String phone;
-
-    private Long loginID;
 }
