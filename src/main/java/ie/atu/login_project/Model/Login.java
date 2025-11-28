@@ -1,4 +1,4 @@
-package ie.atu.login_project;
+package ie.atu.login_project.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +22,6 @@ public class Login {
     private String username;
     @Size(min = 1, max = 20, message = "larger than 20 characters or blank")
     private String password;
-    @NotBlank
+
     private Boolean admin;
 }
