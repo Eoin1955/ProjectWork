@@ -1,4 +1,4 @@
-package ie.atu.login_project;
+package ie.atu.login_project.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -29,6 +29,6 @@ public class PersonDetails {
     private String address;
     @Size(min = 9, max = 10, message = "phone number should be between 9 and 10 characters")
     private String phone;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long loginID;
 }

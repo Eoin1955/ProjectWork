@@ -1,5 +1,7 @@
-package ie.atu.login_project;
+package ie.atu.login_project.Controller;
 
+import ie.atu.login_project.Model.Login;
+import ie.atu.login_project.Service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class LoginController {
     }
 
     @GetMapping("/loginUser")
-    public Login LoginUser(Long id) {
-      return loginService.getLoginById(id);
+    public Login LoginUser(Long Loginid) {
+      return loginService.getLoginById(Loginid);
     }
 
     @GetMapping
@@ -33,14 +35,14 @@ public class LoginController {
     }
 
     @PutMapping("/{id}")
-    public Login updateUser(@PathVariable Long id, @Valid @RequestBody Login updateLogin) {
-        return loginService.updateLogin(id, updateLogin);
+    public Login updateUser(@PathVariable Long Loginid, @Valid @RequestBody Login updateLogin) {
+        return loginService.updateLogin(Loginid, updateLogin);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@RequestParam Long id) {
-        loginService.deleteLogin(id);
+    public void deleteUser(@RequestParam Long Loginid) {
+        loginService.deleteLogin(Loginid);
     }
 
    /* @PostMapping("/PersonDetails")
