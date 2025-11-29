@@ -35,7 +35,7 @@ public class LoginController {
         return loginService.getAllLogins();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update")
     public Login updateUser(@PathVariable Long Loginid, @Valid @RequestBody Login updateLogin) {
         return loginService.updateLogin(Loginid, updateLogin);
     }
@@ -48,7 +48,7 @@ public class LoginController {
 
    @PostMapping("/PersonDetails")
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonDetails createPersonDetails(@Valid @RequestBody  PersonDetails personDetails) {
-        return loginService.createPersonDetails(personDetails);
+    public PersonDetails createPersonDetails(@PathVariable Long loginId, @Valid @RequestBody  PersonDetails personDetails) {
+        return loginService.createPersonDetails(loginId, personDetails);
     }
 }
