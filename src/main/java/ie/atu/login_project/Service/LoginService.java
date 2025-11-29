@@ -18,12 +18,9 @@ public class LoginService {
         this.PDRepo=PDRepo;
     }
 
+    //Login
     public Login createLogin(Login login) {
         return Repo.save(login);
-    }
-
-    public PersonDetails createPersonDetails(PersonDetails personDetails) {
-        return PDRepo.save(personDetails);
     }
 
     public List<Login> getAllLogins() {return Repo.findAll();}
@@ -42,5 +39,31 @@ public class LoginService {
         Login login = Repo.findById(Loginid).orElseThrow(()->new IllegalArgumentException("Login id not found"));
         Repo.delete(login);
         return login;
+    }
+
+    //Details
+    public PersonDetails createPersonDetails(Long loginid, PersonDetails personDetails) {
+
+        Login login = getLoginById(loginid);
+
+        personDetails.setLogin(login);
+
+        return PDRepo.save(personDetails);
+    }
+
+    public List<PersonDetails> getAllPersonDetails() {
+        return PDRepo.findAll();
+    }
+
+    public PersonDetails updatePersonDetails(Long Personid, PersonDetails personDetails) {
+        PersonDetails existing = PDRepo.findById(Personid).orElseThrow(()->new IllegalArgumentException("Person Id not found"));
+
+        existing.setFirstName(personDetails.getFirstName());
+        existing.setLastName(personDetails.getLastName());
+        existing.setEmail(personDetails.getEmail());
+        existing.setPhone(personDetails.getPhone());
+        existing.setAddress(personDetails.getAddress());
+        return PDRepo.save(existing);
+
     }
 }

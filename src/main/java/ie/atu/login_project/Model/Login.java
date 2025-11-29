@@ -24,4 +24,7 @@ public class Login {
     private String password;
 
     private Boolean admin;
+
+    @OneToOne(mappedBy = "login", cascade = CascadeType.ALL)
+    private PersonDetails personDetails;
 }
