@@ -49,6 +49,17 @@ public class LoginController {
    @PostMapping("/PersonDetails")
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDetails createPersonDetails(@PathVariable Long loginId, @Valid @RequestBody  PersonDetails personDetails) {
-        return loginService.createPersonDetails(loginId, personDetails);
+       return loginService.createPersonDetails(loginId, personDetails);
+    }
+
+    @GetMapping
+    public List<PersonDetails> GetPersonDetails() {
+        return loginService.getAllPersonDetails();
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePersonDetails(@RequestParam Long loginid) {
+        loginService.deleteLogin(loginid);
     }
 }

@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 public class PersonDetails {
     @Id
-    private String Loginid;
+    private Long Loginid;
 
     @OneToOne
     @MapsId
