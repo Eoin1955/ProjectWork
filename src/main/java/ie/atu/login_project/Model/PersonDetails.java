@@ -12,11 +12,11 @@ import lombok.*;
 @Builder
 public class PersonDetails {
     @Id
-    private Long Loginid;
+    private Long loginId;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "personId")
+    @JoinColumn(name = "login_id")
     private Login login;
 
     @Size(min = 1, max = 50, message = "firstname more than 50 characters or blank")
@@ -33,4 +33,13 @@ public class PersonDetails {
     private String address;
     @Size(min = 9, max = 10, message = "phone number should be between 9 and 10 characters")
     private String phone;
+
+    public PersonDetails(String firstName, String lastName, int age, String email, String address, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+    }
 }
