@@ -40,26 +40,31 @@ public class LoginController {
         return loginService.updateLogin(Loginid, updateLogin);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{loginId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@RequestParam Long Loginid) {
         loginService.deleteLogin(Loginid);
     }
 
-   @PostMapping("/PersonDetails")
+   @PostMapping("/PersonDetails/{loginId}")
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDetails createPersonDetails(@PathVariable Long loginId, @Valid @RequestBody  PersonDetails personDetails) {
        return loginService.createPersonDetails(loginId, personDetails);
     }
 
-    @GetMapping
+    @GetMapping("/person")
     public List<PersonDetails> GetPersonDetails() {
         return loginService.getAllPersonDetails();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/person/{personId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePersonDetails(@RequestParam Long loginid) {
         loginService.deleteLogin(loginid);
+    }
+
+    @PutMapping("/updateDetails")
+    public PersonDetails updatePersonDetails(@PathVariable Long loginid, @Valid @RequestBody PersonDetails personDetails) {
+        return loginService.updatePersonDetails(loginid, personDetails);
     }
 }
