@@ -48,6 +48,7 @@ public class LoginService {
        Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
 
         personDetails.setLogin(login);
+        login.setPersonDetails(personDetails);
 
         return PDRepo.save(personDetails);
     }
@@ -69,8 +70,8 @@ public class LoginService {
     }
 
     public PersonDetails deletePersonDetails(Long loginId) {
-        Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
-        Repo.delete(login);
-        return login.getPersonDetails();
+        PersonDetails personDetails= PDRepo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
+        PDRepo.delete(personDetails);
+        return personDetails;
     }
 }
