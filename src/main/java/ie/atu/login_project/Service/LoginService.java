@@ -48,7 +48,6 @@ public class LoginService {
        Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
 
         personDetails.setLogin(login);
-        login.setPersonDetails(personDetails);
 
         return PDRepo.save(personDetails);
     }
