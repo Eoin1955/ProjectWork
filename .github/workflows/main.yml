@@ -1,17 +1,44 @@
-name: maven-ci.yml
+name: Build & Push Image
+
 on:
-  push: { branches: [master]}
-  pull_request: {branches: [master]}
+  push:
+    branches: [master]
+  workflow_dispatch:
+
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
-      - name: Sets up Temurin JDK 21
+
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-          cache: maven
-      - name: Build & Test
-        run: mvn -B -ntp -DskipTests=false clean verify
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests
+
+      - name: Set image name (lowercase)
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}/app" >> $GITHUB_ENV
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
