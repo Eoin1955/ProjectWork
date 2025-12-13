@@ -1,7 +1,10 @@
 package ie.atu.login_project.Controller;
 
+import ie.atu.login_project.DTO.BookDTO;
+import ie.atu.login_project.FeignClient.BookClient;
 import ie.atu.login_project.Model.Login;
 import ie.atu.login_project.Model.PersonDetails;
+import ie.atu.login_project.Repository.LoginRepository;
 import ie.atu.login_project.Service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class LoginController {
     private final LoginService loginService;
+    private final BookClient bookClient;
 
-    public LoginController(LoginService loginService) {
+    public LoginController(LoginService loginService, BookClient bookClient) {
         this.loginService = loginService;
+        this.bookClient = bookClient;
     }
 
 
@@ -68,5 +73,10 @@ public class LoginController {
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDetails updatePersonDetails(@RequestParam Long loginid, @Valid @RequestBody PersonDetails personDetails) {
         return loginService.updatePersonDetails(loginid, personDetails);
+    }
+
+    @GetMapping("/GetBook/{id}")
+    public BookDTO getBookID(@PathVariable Long id) {
+        return bookClient.getBookID(id);
     }
 }
