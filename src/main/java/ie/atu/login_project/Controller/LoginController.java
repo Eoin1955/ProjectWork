@@ -10,6 +10,7 @@ import ie.atu.login_project.Repository.LoginRepository;
 import ie.atu.login_project.Service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -84,8 +85,8 @@ public class LoginController {
         return bookClient.getBookID(id);
     }
 
-    @GetMapping("/api/payment history/{id}")
-    public PaymentDTO getPaymentID(@PathVariable Long paymentID){
-        return paymentClient.getPaymentID(paymentID);
+    @GetMapping("/api/payment-history/{id}")
+    public ResponseEntity<PaymentDTO> getPaymentID(@PathVariable("id") Long paymentID) {
+        return ResponseEntity.ok(paymentClient.getPaymentID(paymentID));
     }
 }
