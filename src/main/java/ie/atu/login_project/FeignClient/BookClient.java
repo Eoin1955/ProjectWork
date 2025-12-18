@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 
 public interface BookClient {
-    @GetMapping("/api/book/{id}")
+    @GetMapping("/api/books/{id}")
     BookDTO getBookID(@PathVariable Long id);
 }
