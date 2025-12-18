@@ -1,7 +1,9 @@
 package ie.atu.login_project.Controller;
 
 import ie.atu.login_project.DTO.BookDTO;
+import ie.atu.login_project.DTO.PaymentDTO;
 import ie.atu.login_project.FeignClient.BookClient;
+import ie.atu.login_project.FeignClient.PaymentClient;
 import ie.atu.login_project.Model.Login;
 import ie.atu.login_project.Model.PersonDetails;
 import ie.atu.login_project.Repository.LoginRepository;
@@ -17,10 +19,12 @@ import java.util.List;
 public class LoginController {
     private final LoginService loginService;
     private final BookClient bookClient;
+    private final PaymentClient paymentClient;
 
-    public LoginController(LoginService loginService, BookClient bookClient) {
+    public LoginController(LoginService loginService, BookClient bookClient, PaymentClient paymentClient) {
         this.loginService = loginService;
         this.bookClient = bookClient;
+        this.paymentClient = paymentClient;
     }
 
 
@@ -78,5 +82,10 @@ public class LoginController {
     @GetMapping("/GetBook/{id}")
     public BookDTO getBookID(@PathVariable Long id) {
         return bookClient.getBookID(id);
+    }
+
+    @GetMapping("/api/payment history/{id}")
+    public PaymentDTO getPaymentID(@PathVariable Long paymentID){
+        return paymentClient.getPaymentID(paymentID);
     }
 }
