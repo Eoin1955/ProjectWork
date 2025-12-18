@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public interface PaymentClient {
     @GetMapping("/payments/{id}")
-    PaymentDTO getPaymentById(@PathVariable Long paymentId);
+    PaymentDTO getPaymentID(@PathVariable Long paymentID);
 }
 
 
