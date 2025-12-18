@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 
 public interface PaymentClient {
-    @GetMapping("/api/payment history/{id}")
-    PaymentDTO getPaymentID(@PathVariable Long paymentID);
+    @GetMapping("/payments/{id}")
+    PaymentDTO getPaymentById(@PathVariable Long paymentId);
 }
 
 
