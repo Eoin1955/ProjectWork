@@ -89,4 +89,12 @@ public class LoginController {
     public ResponseEntity<PaymentDTO> getPaymentID(@PathVariable("id") Long paymentID) {
         return ResponseEntity.ok(paymentClient.getPaymentID(paymentID));
     }
+
+    @GetMapping("/payment/{id}")
+    public ResponseEntity<PaymentDTO> getSelectedPayments(@PathVariable Long id) {
+
+        ResponseEntity<PaymentDTO> response = paymentClient.fromPaymentId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
+    }
 }
