@@ -6,7 +6,6 @@ import ie.atu.login_project.FeignClient.BookClient;
 import ie.atu.login_project.FeignClient.PaymentClient;
 import ie.atu.login_project.Model.Login;
 import ie.atu.login_project.Model.PersonDetails;
-import ie.atu.login_project.Repository.LoginRepository;
 import ie.atu.login_project.Service.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -35,9 +35,15 @@ public class LoginController {
        return loginService.createLogin(registerLogin);
     }
 
-    @GetMapping("/loginUser")
-    public Login LoginUser(Long Loginid) {
-      return loginService.getLoginById(Loginid);
+    @GetMapping("/{Loginid}")
+    public ResponseEntity<Login> LoginUser(@PathVariable Long Loginid) {
+      Optional<Login> maybe = loginService.getLoginById(Loginid);
+      if(maybe.isPresent()) {
+          return ResponseEntity.ok(maybe.get());
+      }
+      else{
+          return ResponseEntity.notFound().build();
+      }
     }
 
     @GetMapping
@@ -47,20 +53,32 @@ public class LoginController {
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Login updateUser(@RequestParam Long Loginid, @Valid @RequestBody Login updateLogin) {
-        return loginService.updateLogin(Loginid, updateLogin);
+    public ResponseEntity<Login> updateUser(@RequestParam Long Loginid, @Valid @RequestBody Login updateLogin) {
+        Optional<Login> maybe = loginService.getLoginById(Loginid);
+        if(maybe.isPresent()) {
+            return ResponseEntity.ok(maybe.get());
+        }
+        else {
+        return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{loginId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@RequestParam Long Loginid) {
-        loginService.deleteLogin(Loginid);
+    public ResponseEntity<Login> deleteUser(@RequestParam Long Loginid) {
+        Optional<Login> maybe = loginService.getLoginById(Loginid);
+        if(maybe.isPresent()) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-   @PostMapping("/PersonDetails/{loginId}")
+    @PostMapping("/PersonDetails/{loginId}")
     @ResponseStatus(HttpStatus.CREATED)
     public PersonDetails createPersonDetails(@PathVariable Long loginId, @Valid @RequestBody  PersonDetails personDetails) {
-       return loginService.createPersonDetails(loginId, personDetails);
+        return loginService.createPersonDetails(loginId, personDetails);
     }
 
     @GetMapping("/person")
@@ -70,14 +88,26 @@ public class LoginController {
 
     @DeleteMapping("/person/{personId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePersonDetails(@RequestParam Long loginid) {
-        loginService.deleteLogin(loginid);
+    public ResponseEntity<PersonDetails> deletePersonDetails(@RequestParam Long loginid) {
+        Optional<Login> maybe = loginService.getLoginById(loginid);
+        if(maybe.isPresent()) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/updateDetails/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonDetails updatePersonDetails(@RequestParam Long loginid, @Valid @RequestBody PersonDetails personDetails) {
-        return loginService.updatePersonDetails(loginid, personDetails);
+    public ResponseEntity<PersonDetails> updatePersonDetails(@RequestParam Long loginid, @Valid @RequestBody PersonDetails personDetails) {
+        Optional<Login> maybe = loginService.getLoginById(loginid);
+        if(maybe.isPresent()) {
+            return ResponseEntity.ok(maybe.get().getPersonDetails());
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/GetBook/{id}")
