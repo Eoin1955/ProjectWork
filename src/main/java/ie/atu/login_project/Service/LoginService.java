@@ -1,12 +1,17 @@
 package ie.atu.login_project.Service;
 
+import ie.atu.login_project.ErrorHandling.PersonNotFound;
 import ie.atu.login_project.Repository.LoginRepository;
 import ie.atu.login_project.Model.Login;
 import ie.atu.login_project.Model.PersonDetails;
 import ie.atu.login_project.Repository.PersonDetailsRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 @Service
 public class LoginService {
@@ -25,27 +30,46 @@ public class LoginService {
 
     public List<Login> getAllLogins() {return Repo.findAll();}
 
-    public Login getLoginById(Long loginId) {return Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));}
-
-    public Login updateLogin(Long loginId ,Login login) {
-        Login existing = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
-
-        existing.setUsername(login.getUsername());
-        existing.setPassword(login.getPassword());
-        existing.setAdmin(login.getAdmin());
-        return Repo.save(existing);
+    public Optional<Login> getLoginById(Long loginId) {
+        Optional<Login> login = Repo.findById(loginId);
+        if(login.isPresent()) {
+            return login;
+        }
+        else {
+            throw new PersonNotFound("Login with id " + loginId + " not found");
+        }
     }
 
-    public Login deleteLogin(Long loginId) {
-        Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
-        Repo.delete(login);
-        return login;
+    public Optional<Login> updateLogin(Long loginId ,Login login) {
+        Optional<Login> maybe = Repo.findById(loginId);
+        if(maybe.isPresent()) {
+            Login existing = maybe.get();
+            existing.setUsername(login.getUsername());
+            existing.setPassword(login.getPassword());
+            existing.setAdmin(login.getAdmin());
+            Repo.save(existing);
+            return Optional.of(existing);
+        }
+        else {
+            throw new  PersonNotFound("Login with id " + loginId + " not found");
+        }
+    }
+
+    public Optional<Login> deleteLogin(Long loginId) {
+        Optional<Login> maybe = Repo.findById(loginId);
+        if(maybe.isPresent()) {
+            Repo.delete(maybe.get());
+            return maybe;
+        }
+        else{
+            throw new  PersonNotFound("Login with id " + loginId + " not found");
+        }
     }
 
     //Details
     public PersonDetails createPersonDetails(Long loginId, PersonDetails personDetails) {
 
-       Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
+        Login login = Repo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
 
         personDetails.setLogin(login);
 
@@ -56,21 +80,31 @@ public class LoginService {
         return PDRepo.findAll();
     }
 
-    public PersonDetails updatePersonDetails(Long loginId,PersonDetails personDetails) {
-        PersonDetails existing = PDRepo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Person Id not found"));
-
-        existing.setFirstName(personDetails.getFirstName());
-        existing.setLastName(personDetails.getLastName());
-        existing.setEmail(personDetails.getEmail());
-        existing.setPhone(personDetails.getPhone());
-        existing.setAddress(personDetails.getAddress());
-        return PDRepo.save(existing);
-
+    public Optional<PersonDetails> updatePersonDetails(Long loginId,PersonDetails personDetails) {
+        Optional<PersonDetails> maybe = PDRepo.findById(loginId);
+        if(maybe.isPresent()) {
+            PersonDetails existing = maybe.get();
+            existing.setFirstName(personDetails.getFirstName());
+            existing.setLastName(personDetails.getLastName());
+            existing.setEmail(personDetails.getEmail());
+            existing.setPhone(personDetails.getPhone());
+            existing.setAddress(personDetails.getAddress());
+            PDRepo.save(existing);
+            return Optional.of(existing);
+        }
+        else {
+            throw new  PersonNotFound("Login with id " + loginId + " not found");
+        }
     }
 
-    public PersonDetails deletePersonDetails(Long loginId) {
-        PersonDetails personDetails= PDRepo.findById(loginId).orElseThrow(()->new IllegalArgumentException("Login id not found"));
-        PDRepo.delete(personDetails);
-        return personDetails;
+    public Optional<PersonDetails> deletePersonDetails(Long loginId) {
+        Optional<PersonDetails> personDetails= PDRepo.findById(loginId);
+        if(personDetails.isPresent()) {
+            PDRepo.delete(personDetails.get());
+            return personDetails;
+        }
+       else {
+           throw new  PersonNotFound("Login with id " + loginId + " not found");
+        }
     }
 }
