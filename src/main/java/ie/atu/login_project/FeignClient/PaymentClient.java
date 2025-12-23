@@ -14,9 +14,6 @@ public interface PaymentClient {
 
     @GetMapping("/api/payment/{id}")
     PaymentDTO getPaymentID(@PathVariable("id") Long paymentID);
-
-    @GetMapping("/api/payment/{paymentId}")
-    ResponseEntity<PaymentDTO> fromPaymentId(@PathVariable Long paymentId);
 }
 
 
