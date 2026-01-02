@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
         url = "${payment.service.base-url}"
 )
 public interface PaymentClient {
-
-    @GetMapping("/api/payment/{id}")
-    PaymentDTO getPaymentID(@PathVariable("id") Long paymentID);
+    @GetMapping("/api/payment/{paymentId}")
+    PaymentDTO getPaymentID(@PathVariable Long paymentID);
 }
 
 
