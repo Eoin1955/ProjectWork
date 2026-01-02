@@ -111,8 +111,8 @@ public class LoginController {
     }
 
     @GetMapping("/GetBook/{id}")
-    public BookDTO getBookID(@PathVariable Long id) {
-        return bookClient.getBookID(id);
+    public ResponseEntity<BookDTO> getBookID(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(bookClient.getBookID(id));
     }
 
     @GetMapping("/payment-history/{id}")
