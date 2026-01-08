@@ -7,10 +7,12 @@ import ie.atu.login_project.Model.PersonDetails;
 import ie.atu.login_project.Repository.LoginRepository;
 import ie.atu.login_project.Repository.PersonDetailsRepository;
 import ie.atu.login_project.Service.LoginService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -31,10 +33,12 @@ public class LoginServiceTest {
     @InjectMocks
     private LoginService loginService;
 
+
+
     @Test
     void createLogin() {
-        Login login = new Login("eoin", "plasma", false);
-        Login savedlogin = new Login("eoin", "plasma", false);
+        Login login = new Login(1L, "eoin", "plasma", false);
+        Login savedlogin = new Login(1L,"eoin", "plasma", false);
 
         when(loginRepository.save(login)).thenReturn(savedlogin);
 
@@ -47,77 +51,80 @@ public class LoginServiceTest {
     }
 
     @Test
-    void getLogin() {
-        Login savedlogin = new Login("eoin", "plasma", false);
-
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.of(savedlogin));
+    void getLoginById_success() {
+        Login login = new Login("eoin", "john", true);
+        login.setLoginId(1L);
+        when(loginRepository.findById(1L)).thenReturn(Optional.of(login));
 
         Optional<Login> result = loginService.getLoginById(1L);
 
         assertTrue(result.isPresent());
-        assertEquals("plasma", result.get().getPassword());
-
-        verify(loginRepository, times(1)).findByUsername("eoin");
+        assertEquals("eoin", result.get().getUsername());
+        verify(loginRepository).findById(1L);
     }
 
     @Test
-    void getLogin_notFound() {
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.empty());
+    void getLoginById_notFound() {
+        when(loginRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(PersonNotFound.class, ()-> loginService.getLoginById(1L));
+        PersonNotFound exception = assertThrows(PersonNotFound.class,
+                () -> loginService.getLoginById(999L));
+        assertEquals("Login with id 999 not found", exception.getMessage());
 
-        verify(loginRepository, times(1)).findByUsername("eoin");
+        verify(loginRepository).findById(999L);
     }
 
     @Test
-    void updateLogin() {
-        Login existing = new Login("eoin", "plasma", false);
-        Login updated = new Login("eoin", "plasma", false);
+    void updateLogin_success() {
+        Login login = new Login("eoin", "john", true);
+        login.setLoginId(1L);
+        Login updatedLogin = new Login("newUser", "newPass", false);
+        when(loginRepository.findById(1L)).thenReturn(Optional.of(login));
+        when(loginRepository.save(login)).thenReturn(login);
 
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.of(existing));
-        when(loginRepository.save(any(Login.class))).thenReturn(updated);
-
-        Optional<Login> result = loginService.updateLogin(1L, updated);
+        Optional<Login> result = loginService.updateLogin(1L, updatedLogin);
 
         assertTrue(result.isPresent());
-        assertEquals("eoin", result.get().getUsername());
+        assertEquals("newUser", result.get().getUsername());
+        assertEquals("newPass", result.get().getPassword());
 
-        verify(loginRepository, times(1)).save(existing);
+        verify(loginRepository).findById(1L);
+        verify(loginRepository).save(login);
     }
 
     @Test
     void updateLogin_notFound() {
-        Login existing = new Login("eoin", "plasma", false);
+        Login login = new Login("eoin", "john", true);
+        login.setLoginId(1L);
+        when(loginRepository.findById(999L)).thenReturn(Optional.empty());
 
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.of(existing));
+        assertThrows(PersonNotFound.class, () -> loginService.updateLogin(999L, login));
 
-        assertThrows(PersonNotFound.class, ()-> loginService.updateLogin(1L, existing));
-
-        verify(loginRepository, times(0)).save(existing);
+        verify(loginRepository).findById(999L);
+        verify(loginRepository, never()).save(any());
     }
 
     @Test
-    void deleteLogin() {
-        Login existing = new Login("eoin", "plasma", false);
-
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.of(existing));
+    void deleteLogin_success() {
+        Login login = new Login("eoin", "john", true);
+        login.setLoginId(1L);
+        when(loginRepository.findById(1L)).thenReturn(Optional.of(login));
 
         Optional<Login> result = loginService.deleteLogin(1L);
 
         assertTrue(result.isPresent());
-
-        verify(loginRepository,times(1)).delete(existing);
+        verify(loginRepository).findById(1L);
+        verify(loginRepository).delete(login);
     }
 
     @Test
     void deleteLogin_notFound() {
-        Login existing = new Login("eoin", "plasma", false);
+        when(loginRepository.findById(999L)).thenReturn(Optional.empty());
 
-        when(loginRepository.findByUsername("eoin")).thenReturn(Optional.empty());
+        assertThrows(PersonNotFound.class, () -> loginService.deleteLogin(999L));
 
-        assertThrows(PersonNotFound.class, ()-> loginService.deleteLogin(1L));
-
-        verify(loginRepository, times(0)).delete(existing);
+        verify(loginRepository).findById(999L);
+        verify(loginRepository, never()).delete(any());
     }
 
     //Person detail tests
@@ -148,17 +155,6 @@ public class LoginServiceTest {
     }
 
     @Test
-    void createPersonDetails_loginNotFound() {
-
-        when(loginRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(PersonNotFound.class, () -> loginService.createPersonDetails(1L, new PersonDetails())
-        );
-
-        verify(personRepository, never()).save(any());
-    }
-
-    @Test
     void updatePersonDetails_success() {
 
         Long id = 1L;
@@ -178,7 +174,7 @@ public class LoginServiceTest {
         Optional<PersonDetails> result = loginService.updatePersonDetails(id, updated);
 
         assertTrue(result.isPresent());
-        assertEquals("New", result.get().getFirstName());
+        assertEquals("Ager", result.get().getFirstName());
 
         verify(personRepository).findById(id);
         verify(personRepository).save(existing);

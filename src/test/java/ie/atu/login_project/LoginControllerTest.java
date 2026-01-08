@@ -44,7 +44,7 @@ public class LoginControllerTest {
 
     @Test
     public void testRegisterUser() throws Exception {
-        Login login = new Login("eoin", "john", true);
+        Login login = new Login("eoin", "plasma", true);
         when(loginService.createLogin(any(Login.class))).thenReturn(login);
 
         String json = mapper.writeValueAsString(login);
@@ -53,17 +53,17 @@ public class LoginControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username").value("john"));
+                .andExpect(jsonPath("$.username").value("eoin"));
     }
 
     @Test
     public void testGetUserById() throws Exception {
-        Login login = new Login("eoin", "john", true);
+        Login login = new Login(1L,"eoin", "john", true);
         when(loginService.getLoginById(1L)).thenReturn(Optional.of(login));
 
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.loginId").value(1L));
     }
 
     @Test
@@ -132,7 +132,14 @@ public class LoginControllerTest {
 
     @Test
     public void testCreatePersonDetails() throws Exception {
-        PersonDetails details = new PersonDetails();
+        PersonDetails details = new PersonDetails(
+                "John",
+                "Doe",
+                20,
+                "john@atu.ie",
+                "123 Street",
+                "0891234567"
+        );
         details.setLoginId(1L);
         details.setFirstName("John");
 
@@ -224,6 +231,6 @@ public class LoginControllerTest {
 
         mockMvc.perform(get("/api/user/payment-history/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.paymentId").value(1));
     }
 }
