@@ -48,6 +48,13 @@ public class Login {
         this.admin = admin;
     }
 
+    public Long getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(Long loginId) {
+        this.loginId = loginId;
+    }
 
     public @NotBlank @Size(min = 1, max = 20, message = "larger than 20 characters or blank") String getUsername() {
         return username;
